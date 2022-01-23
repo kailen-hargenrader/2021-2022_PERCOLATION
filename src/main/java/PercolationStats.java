@@ -19,8 +19,8 @@ import java.lang.Math;
 
 public class PercolationStats {
 	
-	double[] Trials;
-	Percolation perc;
+	private double[] Trials;
+	private Percolation perc;
    public PercolationStats(int n, int trials) {
 	   if(n<=0 || trials <=0) throw new IllegalArgumentException("both the size and the number of trials must be positive.");
 	   Trials = new double[trials];
@@ -50,9 +50,9 @@ public class PercolationStats {
      return mean()+(1.96*stddev()/Math.sqrt(Trials.length));
    }
 
-   public static void main(int[] args) {
+   public static void main(String[] args) {
      // test client (described at http://coursera.cs.princeton.edu/algs4/assignments/percolation.html)
-	 PercolationStats p = new PercolationStats(args[0], args[1]);
+	 PercolationStats p = new PercolationStats(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
 	 System.out.println("Mean = " + p.mean());
 	 System.out.println("Stddev = " + p.stddev());
 	 System.out.println("95% Confidence Interval = [" + p.confidenceLo() + ", " + p.confidenceHi() + "]");
