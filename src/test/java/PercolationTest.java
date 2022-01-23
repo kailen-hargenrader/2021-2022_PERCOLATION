@@ -12,7 +12,7 @@ public class PercolationTest {
   private Percolation grid10; 
 
   @Before
-  public void setup() {
+  public void setUp() {
     grid10 = new Percolation(10);
   }
 
@@ -29,7 +29,7 @@ public class PercolationTest {
   @Test
   public void testOpen() {
     grid10.open(1, 1);
-    assertTrue(grid10.isOpen(1, 1));
+    assertTrue("site 1, 1 should be open", grid10.isOpen(1, 1));
   }
 
   @Test

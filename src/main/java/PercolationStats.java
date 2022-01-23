@@ -19,10 +19,12 @@ import java.lang.Math;
 
 public class PercolationStats {
 	
-	private double[] Trials;
-	private Percolation perc;
+	private final double[] Trials;
+	private final double Confidence95 = 1.96; 
+
    public PercolationStats(int n, int trials) {
 	   if(n<=0 || trials <=0) throw new IllegalArgumentException("both the size and the number of trials must be positive.");
+	   Percolation perc;
 	   Trials = new double[trials];
 	   for(int i=0;i<trials;i++) {
 		   perc = new Percolation(n);
@@ -43,11 +45,11 @@ public class PercolationStats {
    }
    public double confidenceLo() {
      // TODO: return low  endpoint of 95% confidence interval
-     return mean()-(1.96*stddev()/Math.sqrt(Trials.length));
+     return mean()-(Confidence95*stddev()/Math.sqrt(Trials.length));
    }
    public double confidenceHi() {
      // TODO: return high endpoint of 95% confidence interval
-     return mean()+(1.96*stddev()/Math.sqrt(Trials.length));
+     return mean()+(Confidence95*stddev()/Math.sqrt(Trials.length));
    }
 
    public static void main(String[] args) {
