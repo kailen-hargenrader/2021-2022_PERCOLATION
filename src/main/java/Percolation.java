@@ -19,10 +19,10 @@ public class Percolation {
 	
 	//System of sets which percolate
 	private WeightedQuickUnionUF systems;
+	private WeightedQuickUnionUF noBackwash;
 	
 	//list of elements which are open
 	private Boolean[][] grid;
-	private Boolean[] parentsConnectedTo0;
 	private int openSites;
 	
 	
@@ -38,8 +38,9 @@ public class Percolation {
     	
     	//elements 0(n)+1 : (1)(n) are the first row, (1)n+1 : (2)(n) the second row, and so on until the last row (n-1)(n)+1 : (n)(n)
     	systems = new WeightedQuickUnionUF(n*n+2);
+    	noBackwash = new WeightedQuickUnionUF(n*n+2);
     	grid = new Boolean[n][n];
-    	parentsConnectedTo0 = new Boolean[n*n];
+
     	for(int i=0;i<n;i++) {
     		for(int j=0;j<n;j++) {
     			grid[i][j] = false;
@@ -48,8 +49,8 @@ public class Percolation {
     	openSites = 0;
 	    for(int i = 0; i < n; i++) {
 	    	systems.union(0, i+1);
+	    	noBackwash.union(0, i+1);
 	    	systems.union(n*n+1, n*n-i);
-	    	parentsConnectedTo0[i] = true;
 	    	}
     }
 
@@ -63,25 +64,26 @@ public class Percolation {
     	//if row or col is out of range throw exception
     	if(row > grid.length || row < 1 || col > grid.length || col < 1) throw new IllegalArgumentException("row and col must be within range.");
     	grid[row-1][col-1] = true;
+    	int store1;
+    	int store2; 
     	if(row != 1 && grid[row-2][col-1] == true) {
-    		if(parentsConnectedTo0[systems.find(grid[0].length*(row-1)+col)] == true || parentsConnectedTo0[systems.find(grid[0].length*(row-2)+col)] == true){
-    			
-    		}
     		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row-2)+col);
+    		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row-2)+col);
     	}
     	if(row != grid.length && grid[row][col-1] == true) {
     		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row)+col);
+    		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row)+col);
     	}
     	if(col != grid.length && grid[row-1][col] == true) {
     		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col+1);
+    		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col+1);
+    		
     	}
     	if(col != 1 && grid[row-1][col-2] == true) {
     		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col-1);
+    		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col-1);
     	}
     	openSites++;
-    	if(!percolates() && isFull(row, col)) {
-    		
-    	}
     	
     }
 
@@ -108,10 +110,7 @@ public class Percolation {
     public boolean isFull(int row, int col) {
     	//if row or col is out of range throw exception
     	if(row > grid.length || row < 1 || col > grid[0].length || col < 1) throw new IllegalArgumentException("row and col must be within range.");
-    	if(percolates()) {
-    		
-    	}
-    	return systems.find(0) == systems.find((row-1)*grid.length+col);
+    	return noBackwash.find(0) == noBackwash.find((row-1)*grid.length+col);
     }
 
     // returns the number of open sites
