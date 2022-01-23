@@ -55,37 +55,42 @@ public class Percolation {
     }
 
     // opens the site (row, col) if it is not open already
+    
     /**
      * Opens up a site and unions adjacent sites. 
      * @param row row index
      * @param col column index
      */
     public void open(int row, int col) {
-    	//if row or col is out of range throw exception
-    	if (row > grid.length || row < 1 || col > grid.length || col < 1) throw new IllegalArgumentException("row and col must be within range.");
-    	grid[row-1][col-1] = true; 
-    	if (row != 1 && grid[row-2][col-1] == true) {
-    		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row-2)+col);
-    		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row-2)+col);
-    	}
-    	if (row != grid.length && grid[row][col-1] == true) {
-    		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row)+col);
-    		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row)+col);
-    	}
-    	if (col != grid.length && grid[row-1][col] == true) {
-    		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col+1);
-    		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col+1);
-    		
-    	}
-    	if (col != 1 && grid[row-1][col-2] == true) {
-    		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col-1);
-    		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col-1);
-    	}
-    	openSites++;
     	
+    	//if row or col is out of range throw exception
+    	
+    	if (row > grid.length || row < 1 || col > grid.length || col < 1) throw new IllegalArgumentException("row and col must be within range.");
+    	if (!isOpen(row, col)) {
+    		grid[row-1][col-1] = true; 
+        	if (row != 1 && grid[row-2][col-1] == true) {
+        		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row-2)+col);
+        		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row-2)+col);
+        	}
+        	if (row != grid.length && grid[row][col-1] == true) {
+        		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row)+col);
+        		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row)+col);
+        	}
+        	if (col != grid.length && grid[row-1][col] == true) {
+        		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col+1);
+        		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col+1);
+        		
+        	}
+        	if (col != 1 && grid[row-1][col-2] == true) {
+        		systems.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col-1);
+        		noBackwash.union(grid[0].length*(row-1)+col, grid[0].length*(row-1)+col-1);
+        	}
+        	openSites++;
+    	}  	
     }
 
     // is the site (row, col) open?
+    
     /**
      * Returns whether the specified element is open 
      * @param row the row of the element 
@@ -93,12 +98,15 @@ public class Percolation {
      * @return the element value
      */
     public boolean isOpen(int row, int col) {
+    	
     	//if row or col is out of range throw exception
+    	
     	if (row > grid.length || row < 1 || col > grid[0].length || col < 1) throw new IllegalArgumentException("row and col must be within range.");
     	return grid[row-1][col-1];
     }
 
     // is the site (row, col) full?
+    
     /**
      * Returns whether the system percolates through the given element
      * @param row row of element
@@ -106,12 +114,15 @@ public class Percolation {
      * @return does the system percolate through the element
      */
     public boolean isFull(int row, int col) {
+    	
     	//if row or col is out of range throw exception
+    	
     	if (row > grid.length || row < 1 || col > grid[0].length || col < 1) throw new IllegalArgumentException("row and col must be within range.");
     	return isOpen(row, col) && noBackwash.find(0) == noBackwash.find((row-1)*grid.length+col);
     }
 
     // returns the number of open sites
+    
     /**
      * Returns openSites, the number of sites that have been opened
      * @return openSites
@@ -121,6 +132,7 @@ public class Percolation {
     }
 
     // does the system percolate?
+    
     /**
      * Returns whether the system percolates
      * @return true if system percolates
