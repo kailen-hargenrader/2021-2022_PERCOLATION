@@ -26,10 +26,13 @@ public class PercolationStats {
 	   Trials = new double[trials];
 	   for(int i=0;i<trials;i++) {
 		   perc = new Percolation(n);
+		   int[] indexs = StdRandom.permutation(n*n);
+		   int j = 0;
 		   while(!perc.percolates()) {
-			   perc.open(StdRandom.uniform(1,n), StdRandom.uniform(1,n));
+			   perc.open((indexs[j])/n+1, indexs[j]%n+1);
+			   j++;
 		   }
-		   Trials[i] = perc.numberOfOpenSites()/(n*n);
+		   Trials[i] = (double) perc.numberOfOpenSites()/(n*n);
 	   }
    }
    public double mean() {
