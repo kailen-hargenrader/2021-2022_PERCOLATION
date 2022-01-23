@@ -1,3 +1,6 @@
+import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.StdStats;
+import java.lang.Math;
 /******************************************************************************
  *  Name:    Kevin Wayne
  *  Login:   wayne
@@ -13,28 +16,42 @@
  *
  *  Description:  Modeling Percolation like a boss. woot. woot.
  ******************************************************************************/
+
 public class PercolationStats {
+	
+	double[] Trials;
+	Percolation perc;
    public PercolationStats(int n, int trials) {
-     // TODO: perform trials independent experiments on an n-by-n grid
+	   if(n<=0 || trials <=0) throw new IllegalArgumentException("both the size and the number of trials must be positive.");
+	   Trials = new double[trials];
+	   for(int i=0;i<trials;i++) {
+		   perc = new Percolation(n);
+		   while(!perc.percolates()) {
+			   perc.open(StdRandom.uniform(1,n), StdRandom.uniform(1,n));
+		   }
+		   Trials[i] = perc.numberOfOpenSites()/(n*n);
+	   }
    }
    public double mean() {
-     // TODO: calculate sample mean of percolation threshold
-     return 0.0;
+     return StdStats.mean(Trials);
    }
    public double stddev() {
-     // TODO: calculate sample standard deviation of percolation threshold
-     return 0.0;
+     return StdStats.stddev(Trials);
    }
    public double confidenceLo() {
      // TODO: return low  endpoint of 95% confidence interval
-     return 0.0;
+     return mean()-(1.96*stddev()/Math.sqrt(Trials.length));
    }
    public double confidenceHi() {
      // TODO: return high endpoint of 95% confidence interval
-     return 0.0;
+     return mean()+(1.96*stddev()/Math.sqrt(Trials.length));
    }
 
-   public static void main(String[] args) {
+   public static void main(int[] args) {
      // test client (described at http://coursera.cs.princeton.edu/algs4/assignments/percolation.html)
+	 PercolationStats p = new PercolationStats(args[0], args[1]);
+	 System.out.println("Mean = " + p.mean());
+	 System.out.println("Stddev = " + p.stddev());
+	 System.out.println("95% Confidence Interval = [" + p.confidenceLo() + ", " + p.confidenceHi() + "]");
    }
 }
